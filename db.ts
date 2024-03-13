@@ -1,14 +1,14 @@
 import Dexie, { Table } from "dexie";
 
 export interface Transaction {
-  id: number;
+  id?: number;
   description: string;
   amount: number;
-  date: Date;
+  date?: Date;
 }
 
 export class MyMoneyTrackingDexie extends Dexie {
-  Transactions!: Table<Transaction>;
+  transactions!: Table<Transaction>;
 
   constructor() {
     super("moneyTrackingDB");
