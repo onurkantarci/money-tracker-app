@@ -1,19 +1,30 @@
 import Dexie, { Table } from "dexie";
 
-export interface Transaction {
+export interface Category {
   id?: number;
-  description: string;
+  name: string;
+  type: string;
+}
+
+export interface Record {
+  id?: number;
+  name: string;
+  note?: string;
   amount: number;
-  date?: Date;
+  category_id: number;
+  category_type?: string;
+  date?: string;
 }
 
 export class MyMoneyTrackingDexie extends Dexie {
-  transactions!: Table<Transaction>;
+  records!: Table<Record>;
+  categories!: Table<Category>;
 
   constructor() {
     super("moneyTrackingDB");
     this.version(1).stores({
-      transactions: "++id, description, amount, date",
+      records: "++id, name, note, amount, category_id, date",
+      categories: "++id, name, type",
     });
   }
 }
