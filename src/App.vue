@@ -6,8 +6,10 @@ import { RouterLink, RouterView } from "vue-router";
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/categories">Categories</RouterLink>
+        <RouterLink to="/" class="router-link"> Home </RouterLink>
+        <RouterLink to="/categories" class="router-link">
+          Categories
+        </RouterLink>
       </nav>
     </div>
   </header>
@@ -17,23 +19,38 @@ import { RouterLink, RouterView } from "vue-router";
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
   display: flex;
   justify-content: center;
+  position: fixed;
+  align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #00406c;
+  backdrop-filter: blur(10px);
+  font-weight: lighter;
+  z-index: 999;
+  max-height: 50px;
+  width: 100%;
 }
 
 nav {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   display: flex;
   align-items: center;
-  top: 0;
   width: 100%;
-  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.router-link {
+  font-weight: 200;
+  color: white;
+  text-decoration: none;
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: white;
+  font-weight: bold;
 }
 
 nav a.router-link-exact-active:hover {
@@ -46,15 +63,17 @@ nav a {
   border-left: 1px solid var(--color-border);
 }
 
-nav a:first-of-type {
-  border: 0;
+nav .v-tab {
+  color: white;
 }
 
 @media (min-width: 1024px) {
   header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    text-align: center;
+    background-color: #00416c84;
+    font-weight: lighter;
+    font-size: 24px;
+    padding: 20px 0;
   }
 
   .logo {
