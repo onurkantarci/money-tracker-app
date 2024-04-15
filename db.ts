@@ -3,7 +3,7 @@ import Dexie, { Table } from "dexie";
 export interface Category {
   id?: number;
   name: string;
-  type: string;
+  type?: string;
 }
 
 export interface Record {
@@ -24,7 +24,7 @@ export class MyMoneyTrackingDexie extends Dexie {
     super("moneyTrackingDB");
     this.version(1).stores({
       records: "++id, name, note, amount, category_id, date",
-      categories: "++id, name, type",
+      categories: "++id, &name, type",
     });
   }
 }
