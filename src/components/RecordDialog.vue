@@ -126,6 +126,7 @@ const initialState = {
   date: new Date().toISOString().substring(0, 10),
   note: "",
   category_id: 0,
+  category_type: "",
 };
 
 const state = reactive({
