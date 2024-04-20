@@ -2,7 +2,7 @@ import Dexie, { Table } from "dexie";
 
 export interface Category {
   id?: number;
-  name: string;
+  name?: string;
   type?: string;
 }
 
@@ -14,6 +14,7 @@ export interface Record {
   category_id: number;
   category_type?: string;
   date?: string;
+  category_name?: string;
 }
 
 export class MyMoneyTrackingDexie extends Dexie {
