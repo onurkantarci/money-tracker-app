@@ -3,6 +3,7 @@
     <div class="revenue-table">
       <div class="income-expense-buttons">
         <v-btn
+          :class="{ active: showingIncome }"
           variant="text"
           class="income-button"
           size="large"
@@ -10,6 +11,7 @@
           >INCOME</v-btn
         >
         <v-btn
+          :class="{ active: showingExpense }"
           variant="text"
           class="expense-button"
           size="large"
@@ -141,7 +143,6 @@ onMounted(() => {
   align-items: center;
   max-width: 550px;
   margin: 0 auto;
-  margin-bottom: 50px;
 }
 
 .revenue-table {
@@ -156,6 +157,7 @@ onMounted(() => {
 .income-expense-buttons {
   color: white;
   display: flex;
+  flex-direction: column;
   gap: 30px;
   align-items: center;
   width: 100%;
@@ -164,6 +166,7 @@ onMounted(() => {
 
 .income-expense-buttons button {
   border-radius: 20px;
+  width: 400px;
 }
 
 .categories-results {
@@ -204,5 +207,20 @@ onMounted(() => {
 .active:hover {
   background-color: #ffffff;
   color: #000000;
+}
+
+@media (min-width: 640px) {
+  .income-expense-buttons {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .income-expense-buttons button {
+    width: 120px;
+  }
 }
 </style>
