@@ -1,14 +1,13 @@
 <template>
   <div class="categories-container">
-    <CategoryList>
-      <v-btn
-        variant="elevated"
-        color="#56CFE1"
-        icon="mdi-plus"
-        class="add-category-button"
-        @click="showAddCategoryDialog()"
-      ></v-btn>
-    </CategoryList>
+    <CategoryList />
+    <v-btn
+      variant="elevated"
+      color="#56CFE1"
+      icon="mdi-plus"
+      class="add-category-button"
+      @click="showAddCategoryDialog()"
+    ></v-btn>
   </div>
 
   <CategoryDialog ref="categoryDialog" />
@@ -31,14 +30,23 @@ function showAddCategoryDialog() {
   max-width: 650px;
   position: relative;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 39px;
 }
 
 .add-category-button {
-  position: absolute;
-  top: 0;
+  position: fixed;
   right: 0;
-  margin-top: 58px;
-  margin-right: 110px;
+  bottom: 0;
+  margin: 20px;
+}
+
+@media (min-width: 640px) {
+  .add-category-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 58px;
+    margin-right: 110px;
+  }
 }
 </style>
