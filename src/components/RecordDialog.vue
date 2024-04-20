@@ -26,12 +26,20 @@
           <v-combobox
             class="v-combobox"
             style="color: white"
-            v-model="selectedCategoryName"
+            v-model="state.selectedCategoryName"
             :items="categoryNames"
             label="Select Category"
             :disabled="!selectedType"
             item-text="name"
+            @blur="v$.selectedCategoryName.$touch"
+            @input="v$.selectedCategoryName.$touch"
+            :error-messages="
+              v$.selectedCategoryName.$errors.map((e) => e.$message)
+            "
           ></v-combobox>
+        </div>
+        <div v-if="state.errorMessage" class="error-message">
+          {{ state.errorMessage }}
         </div>
         <v-form @submit.prevent="submit">
           <main>
@@ -95,12 +103,12 @@ import { required } from "@vuelidate/validators";
 import { watch } from "vue";
 import { liveQuery } from "dexie";
 import { computed } from "vue";
+import { onMounted } from "vue";
 
 const emits = defineEmits(["submit"]);
 const props = defineProps(["action", "record"]);
-const selectedCategoryName = ref<string>("");
-const selectedType = ref<string>("");
 const data = reactive<{ categories: Category[] }>({ categories: [] });
+const selectedType = ref("");
 
 function showCategories(type: string) {
   const query = liveQuery(() => db.categories.where({ type }).toArray());
@@ -115,10 +123,6 @@ const categoryNames = computed(() => {
   return data.categories.map((category) => category.name);
 });
 
-watch(selectedType, (newValue) => {
-  showCategories(newValue);
-});
-
 const initialState = {
   id: 0,
   name: "",
@@ -127,10 +131,13 @@ const initialState = {
   note: "",
   category_id: 0,
   category_type: "",
+  category_name: "",
+  selectedCategoryName: "",
 };
 
 const state = reactive({
   ...initialState,
+  errorMessage: "",
 });
 
 const rules = {
@@ -144,15 +151,46 @@ const rules = {
   date: {
     required,
   },
+  selectedCategoryName: { required },
 };
 
 const v$ = useVuelidate(rules, state);
+
+const initializeCategoryNames = () => {
+  if (selectedType) {
+    showCategories(selectedType.value);
+  }
+};
+
+const handleTypeChange = () => {
+  state.selectedCategoryName = "";
+};
+
+watch(selectedType, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    handleTypeChange();
+  }
+});
+
+watch(selectedType, () => {
+  initializeCategoryNames();
+});
+
+onMounted(initializeCategoryNames);
 
 const dialogVisible = ref(false);
 
 const showDialog = (recordData: Record) => {
   Object.assign(state, recordData);
   state.amount = Math.abs(state.amount) || 0;
+
+  selectedType.value = state.category_type;
+
+  showCategories(selectedType.value);
+
+  setTimeout(() => {
+    state.selectedCategoryName = state.category_name;
+  }, 1);
 
   dialogVisible.value = true;
 };
@@ -163,7 +201,7 @@ const close = () => {
 
 const getCategoryObject = () => {
   const categoryObject = data.categories.find(
-    (category) => category.name === selectedCategoryName.value
+    (category) => category.name === state.selectedCategoryName
   );
   console.log("Category Object:", categoryObject);
   return categoryObject;
@@ -178,12 +216,36 @@ const submit = async () => {
 
   const selectedCategoryObject = getCategoryObject();
 
-  if (selectedCategoryObject && selectedCategoryObject.id !== undefined) {
-    state.category_id = selectedCategoryObject.id;
+  if (!selectedCategoryObject) {
+    state.errorMessage = "Category is required.";
+    console.log("Selected category not found");
+    return;
+  } else {
+    state.errorMessage = "";
   }
+
+  if (selectedCategoryObject.id !== undefined) {
+    state.category_id = selectedCategoryObject.id;
+  } else {
+    console.error("Category object does not contain id property");
+    return;
+  }
+
+  const isExpense =
+    selectedType.value === "expense" &&
+    selectedCategoryObject.type === "expense" &&
+    selectedCategoryObject.name === state.selectedCategoryName;
+
+  state.amount = isExpense ? -Math.abs(state.amount) : Math.abs(state.amount);
+
   if (props.action === "Add Record") {
-    state.amount *= selectedCategoryObject?.type === "expense" ? -1 : 1;
-    const { id, ...record } = state;
+    const {
+      id,
+      selectedCategoryName,
+      category_type,
+      category_name,
+      ...record
+    } = state;
     db.records
       .add(record)
       .then(() => {
@@ -195,8 +257,13 @@ const submit = async () => {
         console.error("Error adding record:", error);
       });
   } else if (state.id !== undefined) {
-    state.amount *= selectedCategoryObject?.type === "expense" ? -1 : 1;
-    const { id, category_type, ...record } = state;
+    const {
+      id,
+      selectedCategoryName,
+      category_type,
+      category_name,
+      ...record
+    } = state;
     db.records
       .update(state.id, record)
       .then(() => {
@@ -258,5 +325,13 @@ defineExpose({
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
+}
+
+.error-message {
+  color: rgb(194, 0, 0);
+  margin-top: -10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 15px;
 }
 </style>
