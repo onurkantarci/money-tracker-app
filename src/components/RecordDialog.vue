@@ -61,7 +61,7 @@
                 @blur="v$.name.$touch"
                 @input="v$.name.$touch"
                 :counter="10"
-                label="First name"
+                label="Name"
                 required
               ></v-text-field>
               <v-text-field
