@@ -46,6 +46,8 @@ nav {
   font-weight: 200;
   color: white;
   text-decoration: none;
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 nav a.router-link-exact-active {
@@ -65,34 +67,5 @@ nav a {
 
 nav .v-tab {
   color: white;
-}
-
-@media (min-width: 1024px) {
-  header {
-    text-align: center;
-    background-color: #00416c84;
-    font-weight: lighter;
-    font-size: 24px;
-    padding: 20px 0;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style>
