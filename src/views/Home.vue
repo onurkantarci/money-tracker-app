@@ -1,5 +1,14 @@
 <template>
   <div class="whole-content-container">
+    <div class="add-record-container">
+      <v-btn
+        variant="elevated"
+        color="#56CFE1"
+        icon="mdi-plus"
+        class="add-record-button"
+        @click="showAddRecordDialog()"
+      ></v-btn>
+    </div>
     <div class="header">
       <div class="img-container">
         <img :src="monthlySvg" alt="month-background" />
@@ -29,15 +38,6 @@
             </div>
           </div>
         </div>
-        <div class="month-selector">
-          <v-text-field
-            color="#FFFFFF"
-            type="month"
-            hide-details
-            v-model="selectedMonth"
-            @change="loadRecords"
-          />
-        </div>
         <div class="search-input">
           <v-text-field
             clearable
@@ -48,6 +48,15 @@
             label="Search a record..."
             v-model="searchQuery"
           ></v-text-field>
+        </div>
+        <div class="month-selector">
+          <v-text-field
+            color="#FFFFFF"
+            type="month"
+            hide-details
+            v-model="selectedMonth"
+            @change="loadRecords"
+          />
         </div>
       </div>
     </div>
@@ -71,7 +80,7 @@
       @confirmed="handleConfirmationSubmit"
     />
 
-    <div v-if="groupedRecords.length === 0" class="main-content">
+    <div v-if="groupedRecords.length === 0" class="empty-search-container">
       <img class="empty-img" src="/public/questionmark.svg" alt="No Records" />
       <p style="color: white">No records available for the selected month.</p>
     </div>
@@ -120,15 +129,6 @@
             </div>
           </div>
         </template>
-        <div class="add-record-container">
-          <v-btn
-            variant="elevated"
-            color="#56CFE1"
-            icon="mdi-plus"
-            class="add-record-button"
-            @click="showAddRecordDialog()"
-          ></v-btn>
-        </div>
       </div>
       <div
         v-if="contextMenu.visible && contextMenu.record"
@@ -154,9 +154,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="footer">
-    <p>&copy; 2024 All rights reserved.</p>
   </div>
 </template>
 
@@ -390,6 +387,7 @@ async function loadRecords() {
       return {
         ...record,
         category_type: category ? category.type : "Unknown",
+        category_name: category ? category.name : "Unknown",
       };
     })
     .sort((a, b) => b.id! - a.id!);
@@ -408,29 +406,39 @@ body {
   background-color: #001523;
 }
 
-.footer {
-  background-color: #01121e;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
-  width: 100%;
-  position: relative;
-  bottom: 0;
-}
-
 .daily-amount-sum {
   margin-top: 50px;
   color: #aaaaaaa5;
 }
 
 .header {
-  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 500px;
   background-color: #00253e;
 }
 
+.month-selector {
+  background-color: rgba(0, 65, 108, 0.16);
+  backdrop-filter: blur(10px);
+  color: white;
+  margin-top: 30px;
+  position: absolute;
+  margin-left: 25px;
+}
+
+.search-input {
+  color: white;
+  margin-top: 30px;
+}
+
 .header img {
-  padding: 40px;
-  height: 350px;
+  padding: 10px;
+  max-height: 250px;
   width: 100%;
   top: 0;
   left: 0;
@@ -455,14 +463,15 @@ body {
   background-color: #00253ebf;
   border-radius: 30px;
   width: 100%;
-  padding: 0px 40px 40px 40px;
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding-bottom: 20px;
 }
 
 .financial-data-container {
   position: absolute;
+  margin-top: -60px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -472,6 +481,7 @@ body {
 
 .financial-data {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 50px;
@@ -513,22 +523,23 @@ body {
 }
 
 .empty-img {
-  margin-top: 80px;
+  margin-top: 30px;
   margin-bottom: 10px;
-  max-width: 40%;
+  max-width: 60%;
 }
 
 .add-record-container {
   position: fixed;
   margin-left: 800px;
-  bottom: 100px;
-  padding: 10px;
+  bottom: 0;
+  right: 0;
+  margin: 20px;
   border-radius: 100%;
   z-index: 1;
 }
 
 .whole-content-container {
-  margin-top: 50px;
+  margin-top: 40px;
   max-width: 800px;
   display: flex;
   justify-content: center;
@@ -537,38 +548,6 @@ body {
   margin-left: auto;
   margin-right: auto;
   position: relative;
-}
-
-.header {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-}
-
-.month-selector {
-  background-color: rgba(0, 65, 108, 0.16);
-  backdrop-filter: blur(10px);
-  left: 0;
-  bottom: 0;
-  color: white;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.search-input {
-  right: 0;
-  bottom: 0;
-  color: white;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 36%;
 }
 
 .results-container {
@@ -649,6 +628,16 @@ p {
   color: #aaaaaa9c;
 }
 
+.empty-search-container {
+  background-color: #001a2c;
+  width: 100%;
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .month-and-year {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -662,10 +651,117 @@ p {
 }
 
 .left-line {
-  border-left: 1px solid #024d7e;
+  border-left: none;
 }
 
 .balance-expenses {
-  margin-left: 50px;
+  margin-left: 0px;
+}
+
+@media (min-width: 640px) {
+  .main-content-background {
+    padding: 0px 40px 40px 40px;
+  }
+  .add-record-container {
+    position: fixed;
+    border-radius: 100%;
+    z-index: 1;
+  }
+  .empty-search-container {
+    background-color: #001a2c;
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .empty-img {
+    margin-top: 80px;
+    margin-bottom: 10px;
+    max-width: 40%;
+  }
+  .search-input {
+    right: 0;
+    bottom: 0;
+    color: white;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36%;
+  }
+  .month-selector {
+    background-color: rgba(0, 65, 108, 0.16);
+    backdrop-filter: blur(10px);
+    left: 0;
+    margin-left: 0;
+    bottom: 0;
+    color: white;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .header {
+    padding-top: 60px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    background-color: #00253e;
+  }
+  .whole-content-container {
+    margin-top: 49px;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  .header img {
+    padding: 30px;
+    height: 350px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .financial-data-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .financial-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 50px;
+    background-color: #00111c62;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px 40px 20px 40px;
+    color: #f5f5f5;
+  }
+
+  .left-line {
+    border-left: 1px solid #024d7e;
+  }
+
+  .balance-expenses {
+    margin-left: 50px;
+  }
 }
 </style>
