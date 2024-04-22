@@ -51,6 +51,7 @@
         </div>
         <div class="month-selector">
           <v-text-field
+            class="month-input"
             color="#FFFFFF"
             type="month"
             hide-details
@@ -658,7 +659,14 @@ p {
   margin-left: 0px;
 }
 
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 @media (min-width: 640px) {
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
   .main-content-background {
     padding: 0px 40px 40px 40px;
   }
