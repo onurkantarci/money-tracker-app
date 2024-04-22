@@ -47,7 +47,6 @@
               <v-text-field
                 clearable
                 required
-                :counter="10"
                 @blur="v$.amount.$touch"
                 @input="v$.amount.$touch"
                 label="Amount"
@@ -60,7 +59,6 @@
                 v-model="state.name"
                 @blur="v$.name.$touch"
                 @input="v$.name.$touch"
-                :counter="10"
                 label="Name"
                 required
               ></v-text-field>
@@ -76,7 +74,6 @@
               ></v-text-field>
               <v-text-field
                 clearable
-                :counter="10"
                 label="Note(Optional)"
                 v-model="state.note"
               ></v-text-field>
@@ -197,6 +194,7 @@ const showDialog = (recordData: Record) => {
 
 const close = () => {
   dialogVisible.value = false;
+  v$.value.$reset();
 };
 
 const getCategoryObject = () => {
@@ -249,6 +247,7 @@ const submit = async () => {
     db.records
       .add(record)
       .then(() => {
+        v$.value.$reset();
         Object.assign(state, initialState);
         close();
         console.log("Record added successfully");
@@ -267,6 +266,7 @@ const submit = async () => {
     db.records
       .update(state.id, record)
       .then(() => {
+        v$.value.$reset();
         close();
         console.log("Record edited successfully");
       })
@@ -293,6 +293,7 @@ defineExpose({
 
 .v-select {
   max-width: 130px;
+  margin-right: 5px;
 }
 
 .v-dialog {
@@ -326,7 +327,6 @@ defineExpose({
   justify-content: flex-end;
   margin-bottom: 10px;
 }
-
 .error-message {
   color: rgb(194, 0, 0);
   margin-top: -10px;
