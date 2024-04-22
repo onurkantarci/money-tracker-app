@@ -25,7 +25,11 @@
         associated="Deleting the category will remove all the associated records!"
         @confirmed="handleConfirmationSubmit"
       />
+      <div v-if="data.categories.length === 0" class="no-categories">
+        Start by adding a category...
+      </div>
       <div
+        v-else
         @click="selectCategory(category)"
         v-for="category in data.categories"
         :key="category.id"
@@ -137,6 +141,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.no-categories {
+  margin-top: 50px;
+  color: rgba(255, 255, 255, 0.363);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .whole-category-list {
   display: flex;
   justify-content: center;
