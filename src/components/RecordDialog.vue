@@ -294,12 +294,18 @@ defineExpose({
 .v-select {
   max-width: 130px;
   margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.v-combobox {
+  margin-bottom: 5px;
 }
 
 .v-dialog {
   max-width: 500px;
   margin: 0 auto;
 }
+
 .v-card {
   background-color: #001e45;
 }
