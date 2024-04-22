@@ -150,8 +150,9 @@ onMounted(() => {
   margin: 10px;
   background-color: rgb(0, 35, 57);
   backdrop-filter: blur(10px);
-  border-radius: 30px;
   padding: 50px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 .income-expense-buttons {
