@@ -37,7 +37,6 @@
                 clearable
                 @blur="v$.name.$touch"
                 @input="v$.name.$touch"
-                :counter="10"
                 label="Category Name"
                 v-model="state.name"
               ></v-text-field>
@@ -92,6 +91,7 @@ const v$ = useVuelidate(rules, state);
 
 async function saveCategory() {
   if (v$.value.$invalid) {
+    console.log("Validation failed, not saving category.");
     return;
   }
 
@@ -100,6 +100,8 @@ async function saveCategory() {
       name: state.name,
       type: selectedOption.value,
     });
+    v$.value.$reset();
+    Object.assign(state, initialState);
     close();
   } catch (error) {
     console.error(`Error saving category: ${error}`);
@@ -112,6 +114,7 @@ const showDialog = () => {
 
 const close = () => {
   dialogVisible.value = false;
+  v$.value.$reset();
 };
 
 defineExpose({
